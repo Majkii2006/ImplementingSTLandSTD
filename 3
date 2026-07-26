@@ -1,0 +1,45 @@
+#include <iostream>
+
+struct Node {
+	
+
+	int m_data { 0 };
+	Node* m_next{ nullptr };
+
+};
+
+struct LinkedList {
+
+	Node* m_head { nullptr };
+	Node* m_last { nullptr };
+	bool is_first { };
+
+	LinkedList() {
+		Node* head = new Node();	
+		m_head = head;
+		is_first = true;
+		
+	};
+
+
+	void append(int data) {
+		Node* node = new Node();	
+		node->m_data = data;
+		node->m_next = nullptr;
+		if( is_first == true ) {
+			m_head = node;
+			is_first = false;
+		}
+		else {
+			
+		
+		}
+	}
+
+};
+
+int main() {
+
+
+	return 0;
+}
