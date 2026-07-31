@@ -66,5 +66,3 @@ int main () {
 	return 0;
 }
 
-// UniquePtr -> nie można go kopiować, można przenosić <=> może zmieniać właściciela
-// Ma jakieś tam swoje metody
