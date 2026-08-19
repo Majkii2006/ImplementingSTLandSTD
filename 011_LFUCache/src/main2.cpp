@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <unordered_map>
@@ -27,6 +28,16 @@ struct Node {
 // aktualizacja danego klucza to kontunuacja 
 
 class LFUCache {
+	private:
+		//funkcja pomocnicza do podgladniecia setu
+		void printSet() const {
+			for (auto& [freq, pointer] : freq_to_pointers) { 	//feature C++17
+				std::cout << "Frequency of node: " << freq << std::endl;	
+				std::cout << "Number of nodes with this frequency: "<< pointer.size() << std::endl;
+			}	
+			std::cout << "-------" << std::endl;
+		}	
+
 
 	public:
 		LFUCache(int capacity) : m_capacity(capacity) {
@@ -40,10 +51,15 @@ class LFUCache {
 		int get(int key) {
 			if (key_to_node.contains(key)) {
 				Node* takenNode = key_to_node[key];
+				freq_to_pointers[takenNode->node_freq].erase(takenNode);
 				takenNode->node_freq++;
+				freq_to_pointers[takenNode->node_freq].insert(takenNode);	
+
 				//std::cout << "Node Frequency was increased" << std::endl;
+				printSet();
 				return takenNode->m_value;
 			}
+			printSet();
 			return -1;
 		}
 	
@@ -59,8 +75,9 @@ class LFUCache {
 				//std::cout << key_to_node.size();
 				freq_to_pointers[createdNode->node_freq].insert(createdNode); //operator [] automatycznie utworzy ten klucz 
 											      //jesli go nie ma 
-				
-				
+				//std::cout << freq_to_pointers.size() << std::endl;	
+				printSet();
+						
 			}			
 		}
 
@@ -80,7 +97,9 @@ class LFUCache {
 int main() {
 	LFUCache instance(10);	
 	instance.put(2, 3);
-	std::cout << instance.get(2) << std::endl;
+	instance.get(2);
+	instance.put(1,4);
+	instance.get(2);
 
 
 
