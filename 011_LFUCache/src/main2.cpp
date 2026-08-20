@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
@@ -17,6 +18,7 @@ struct Node {
 	
 	~Node() {
 		std::cout << "Node Destructed" << std::endl;
+
 	}
 
 };
@@ -30,7 +32,7 @@ struct Node {
 class LFUCache {
 	private:
 		//funkcja pomocnicza do podgladniecia setu
-		void printSet() const {
+		void printSetContents() const {
 			for (auto& [freq, pointer] : freq_to_pointers) { 	//feature C++17
 				std::cout << "Frequency of node: " << freq << std::endl;	
 				std::cout << "Number of nodes with this frequency: "<< pointer.size() << std::endl;
@@ -56,11 +58,13 @@ class LFUCache {
 				freq_to_pointers[takenNode->node_freq].insert(takenNode);	
 
 				//std::cout << "Node Frequency was increased" << std::endl;
-				printSet();
+				printSetContents();
 				return takenNode->m_value;
 			}
-			printSet();
-			return -1;
+			else {
+				return -1;			
+			}
+			printSetContents();
 		}
 	
  		void put(int key, int value) {
@@ -75,17 +79,46 @@ class LFUCache {
 				//std::cout << key_to_node.size();
 				freq_to_pointers[createdNode->node_freq].insert(createdNode); //operator [] automatycznie utworzy ten klucz 
 											      //jesli go nie ma 
-				//std::cout << freq_to_pointers.size() << std::endl;	
-				printSet();
+				
+				for (auto it { freq_to_pointers.begin() }; it != freq_to_pointers.end(); ++it) {
+					if ( it->second.size() == 0 ) {
+						freq_to_pointers.erase(it);	
+					}	
+				}
+
+			//std::cout << freq_to_pointers.size() << std::endl;	
 						
 			}			
+			else {
+				Node* createdNode = new Node(key, value);
+				auto first_element_map = freq_to_pointers.begin();
+				auto first_element_set = first_element_map->second.begin();
+				
+				
+				
+				
+				Node* toDelete = *first_element_map->second.begin();
+							
+				delete toDelete;
+				
+				key_to_node.insert(std::make_pair(key, createdNode)); // potencjalnie wolne 
+				freq_to_pointers[createdNode->node_freq].insert(createdNode); //operator [] automatycznie utworzy ten klucz 
+				
+				for (auto it { freq_to_pointers.begin() }; it != freq_to_pointers.end(); ++it) {
+					if ( it->second.size() == 0 ) {
+						freq_to_pointers.erase(it);	
+					}	
+				}							      
+			}
+
+			printSetContents();
 		}
 
 
 
 	private:
 		std::unordered_map<int, Node*> key_to_node { };
-		std::unordered_map<int, std::unordered_set<Node*>> freq_to_pointers { };
+		std::map<int, std::unordered_set<Node*>> freq_to_pointers { };
 		std::size_t m_capacity {};
 		int min_freq {};
 
@@ -95,11 +128,13 @@ class LFUCache {
 
 
 int main() {
-	LFUCache instance(10);	
+	LFUCache instance(2);	
 	instance.put(2, 3);
 	instance.get(2);
 	instance.put(1,4);
 	instance.get(2);
+	instance.put(3,10);
+	
 
 
 
