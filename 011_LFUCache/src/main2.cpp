@@ -47,6 +47,11 @@ class LFUCache {
 		}
 
 		~LFUCache() {
+			for ( auto it { key_to_node.begin() }; it != key_to_node.end(); ++it) {
+				if (!(it->second == nullptr)) {
+					delete it->second;
+				}
+			}
 			std::cout << "LFUCache instance Destructed" << std::endl;
 		}
 
@@ -80,9 +85,11 @@ class LFUCache {
 				freq_to_pointers[createdNode->node_freq].insert(createdNode); //operator [] automatycznie utworzy ten klucz 
 											      //jesli go nie ma 
 				
-				for (auto it { freq_to_pointers.begin() }; it != freq_to_pointers.end(); ++it) {
-					if ( it->second.size() == 0 ) {
-						freq_to_pointers.erase(it);	
+				for (auto it { freq_to_pointers.begin() }; it != freq_to_pointers.end(); ) {
+					if ( it->second.empty() ) {
+						it = freq_to_pointers.erase(it);	
+					} else {
+						++it;
 					}	
 				}
 
@@ -91,24 +98,25 @@ class LFUCache {
 			}			
 			else {
 				Node* createdNode = new Node(key, value);
+
 				auto first_element_map = freq_to_pointers.begin();
-				auto first_element_set = first_element_map->second.begin();
-				
-				
-				
-				
+						
 				Node* toDelete = *first_element_map->second.begin();
-							
+				freq_to_pointers[toDelete->node_freq].erase(toDelete);
+				key_to_node.erase(toDelete->m_key);
 				delete toDelete;
 				
 				key_to_node.insert(std::make_pair(key, createdNode)); // potencjalnie wolne 
 				freq_to_pointers[createdNode->node_freq].insert(createdNode); //operator [] automatycznie utworzy ten klucz 
 				
-				for (auto it { freq_to_pointers.begin() }; it != freq_to_pointers.end(); ++it) {
-					if ( it->second.size() == 0 ) {
-						freq_to_pointers.erase(it);	
+				for (auto it { freq_to_pointers.begin() }; it != freq_to_pointers.end();) {
+					if ( it->second.empty() ) {
+						it = freq_to_pointers.erase(it);	
+					} else {
+						++it;
 					}	
 				}							      
+
 			}
 
 			printSetContents();
