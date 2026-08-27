@@ -1,4 +1,7 @@
+#include <array>
+#include <cstddef>
 #include <iostream>
+#include <list>
 #include <random>
 #include <unordered_map>
 #include <utility>
@@ -25,7 +28,6 @@ class RRCache {
 			std::mt19937 gen(rd());
 			std::uniform_int_distribution<> distribution(0, static_cast<int>(m_capacity) - 1);
 			return distribution(gen);
-			
 		}
 
 	public:
@@ -34,12 +36,12 @@ class RRCache {
 		}
 		
 		~RRCache() {
-			std::cout << "RRCache instance deleted" << std::endl;
 			for (auto it { map.begin() }; it != map.end(); ++it) {
 				if (it->second != nullptr) {
 					delete it->second;
 				}	
 			}	
+			std::cout << "RRCache instance deleted" << std::endl;
 		}
 
 
@@ -58,16 +60,20 @@ class RRCache {
 					map.emplace(key, newElement);
 				} 
 				else {
+				
 					int index_to_delete = pickRandomly();
 					for ( auto it { map.begin() }; it != map.end(); ++it) {
-						index_to_delete--;									
-						if (index_to_delete < 0) {
-							map.erase(it);		
-							Element* toDelete = it->second;
-							delete toDelete;
-							return;
-						}	
-					}		
+						allKeys.push_back(it->first);
+					}
+					int picked_key = allKeys[index_to_delete];	
+					allKeys.erase(allKeys.begin() + index_to_delete);		
+				
+					Element* toDelete = map.at(picked_key);
+					std::cout << "Deleted element with key:" << toDelete->m_key << std::endl;
+					delete toDelete;
+					map.erase(picked_key);
+					Element* newElement = new Element(key, value);
+					map.emplace(key, newElement);
 				}
 
 			} else {
@@ -80,16 +86,24 @@ class RRCache {
 		std::size_t m_capacity { };
 		std::unordered_map<int, Element*> map { };
 		std::random_device rd;
+		std::vector<int> allKeys { };
 };
 
 
 
 
 int main() {
-	RRCache instance(2);
+	RRCache instance(4);
 	instance.put(1, 1);
 	instance.put(2, 2);
 	instance.put(3, 3);
+	instance.put(4, 4);
+	instance.put(5, 5);
+	instance.put(6, 6);
+	instance.put(7, 7);
+	instance.put(8, 8);
+	instance.put(8, 8);
+	
 
 
 	return 0;
