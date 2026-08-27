@@ -58,9 +58,11 @@ class RRCache {
 				if (map.size() < m_capacity) {
 					Element* newElement = new Element(key, value);	
 					map.emplace(key, newElement);
+
 				} 
 				else {
 				
+					std::vector<int> allKeys { };
 					int index_to_delete = pickRandomly();
 					for ( auto it { map.begin() }; it != map.end(); ++it) {
 						allKeys.push_back(it->first);
@@ -86,7 +88,6 @@ class RRCache {
 		std::size_t m_capacity { };
 		std::unordered_map<int, Element*> map { };
 		std::random_device rd;
-		std::vector<int> allKeys { };
 };
 
 
@@ -102,7 +103,7 @@ int main() {
 	instance.put(6, 6);
 	instance.put(7, 7);
 	instance.put(8, 8);
-	instance.put(8, 8);
+	instance.put(9, 9);
 	
 
 
