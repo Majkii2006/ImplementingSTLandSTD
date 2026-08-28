@@ -1,22 +1,31 @@
 #include <iostream>
+#include <memory>
 
 #include "../include/LRUCache.hpp"
 
+enum class CacheType {
+	LRU,
+	FIFO,
+	LFU,
+	RR
+};
+
 class Cache {
 
-	public:
-		auto createCache() {
-				
-		}
+	
 
-	private:
-		Cache() {
-			std::cout << "Cache Constructed" << std::endl;
-		}
-		virtual ~Cache() {};	
 };
 
 
+
+class CacheFactory : public Cache {
+	public:
+		static std::unique_ptr<Cache> create(CacheType type, int capacity) {
+
+		}				
+
+
+};
 
 
 int main() {

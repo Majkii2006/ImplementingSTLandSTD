@@ -1,5 +1,9 @@
+#pragma once
+
 #include <iostream>
 #include <unordered_map>
+
+#include "../include/Cache.hpp"
 
 struct Node {
 	int key { };
@@ -13,7 +17,7 @@ struct Node {
 	}; 
 };
 
-class LRUCache {
+class LRUCache : public Cache {
 	private:
 		std::unordered_map<int, Node*> map { };	
 		int m_capacity { };
@@ -56,7 +60,7 @@ class LRUCache {
 			}
 		}
 
-		int get(int key) {
+		int get(int key) override {
 			if (!(map.contains(key))) { 
 				std::cout << "Cache Miss!" << std::endl;
 				return -1; 
@@ -72,7 +76,7 @@ class LRUCache {
 			return node->value;
 		}
 
-		void put(int key, int value) {
+		void put(int key, int value) override {
 			if (map.contains(key)) {
 				Node* node = map[key];
 				node->value = value;
