@@ -1,45 +1,39 @@
-#include <algorithm>
+#pragma once
+
 #include <iostream>
 #include <map>
-#include <memory>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
 
 #include "../include/Cache.hpp"
 
-struct Node {
-	
-	int m_key {};
-	int m_value {};
-	int node_freq {};
-	Node(int key, int value) : m_key(key), m_value(value) {
-		node_freq = 1;
-		std::cout << "Node Constructed" << std::endl;
-	}
-	
-	~Node() {
-		std::cout << "Node Destructed" << std::endl;
-
-	}
-
-};
-
-// LFU Policy dziala nastepujaco:
-// zaczynamy z frequency 1 dla kazdego node'a
-// gdy mamy get ->> czestotliwosc wzrasta o jeden
-// gdy potrzeba wymienic bo mamy full capacity to usuwamy ten z najmniejszym freq
-// aktualizacja danego klucza to kontunuacja 
-
 class LFUCache : public Cache {
 	private:
+
+		struct Node {
+			
+			int m_key {};
+			int m_value {};
+			int node_freq {};
+			Node(int key, int value) : m_key(key), m_value(value) {
+				node_freq = 1;
+				std::cout << "Node Constructed" << std::endl;
+			}
+			
+			~Node() {
+				std::cout << "Node Destructed" << std::endl;
+
+			}
+
+		};
+
 		//funkcja pomocnicza do podgladniecia setu
 		void printSetContents() const {
 			for (auto& [freq, pointer] : freq_to_pointers) { 	//feature C++17
 				std::cout << "Frequency of node: " << freq << std::endl;	
 				std::cout << "Number of nodes with this frequency: "<< pointer.size() << std::endl;
 			}	
-			std::cout << "-------" << std::endl;
 		}	
 
 

@@ -6,23 +6,27 @@
 #include <unordered_map>
 #include <utility>
 
-struct Element {
-
-	Element(int key, int value) : m_key(key), m_value(value) {
-		std::cout << "Element created" << std::endl;
-	}
-
-	~Element() {
-		std::cout << "Element deleted" << std::endl;
-	}
-
-	int m_key { };
-	int m_value { };
-	
-};
-
 class RRCache {
 	private:
+
+		struct Element {
+
+			Element(int key, int value) : m_key(key), m_value(value) {
+				std::cout << "Element created" << std::endl;
+			}
+
+			~Element() {
+				std::cout << "Element deleted" << std::endl;
+			}
+
+			int m_key { };
+			int m_value { };
+			
+		};
+
+
+
+
 		int pickRandomly() {
 			//wylosowac randomowo indeks wzakresie od  elementu do m_capacity	
 			std::mt19937 gen(rd());

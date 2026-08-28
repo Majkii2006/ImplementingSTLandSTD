@@ -3,6 +3,7 @@
 class Cache {
 
 	public:
+		
 		virtual ~Cache() = default;
 
 		virtual int get(int key) = 0;

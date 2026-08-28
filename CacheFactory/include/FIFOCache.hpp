@@ -10,26 +10,26 @@
 
 #include "../include/Cache.hpp"
 
-struct Element {
-	int m_key;
-	int m_value;
-
-	Element(int key, int value) : m_key(key), m_value(value) {
-		std::cout << "Element Constructed" << std::endl;
-	}
-};
-
-
-class FIFOCache : public Cache{
+class FIFOCache : public Cache {
 
 	private:
+		struct Element {
+			int m_key;
+			int m_value;
+
+			Element(int key, int value) : m_key(key), m_value(value) {
+				std::cout << "Node Constructed" << std::endl;
+			}
+		};
+
+
 		std::unordered_map<int, Element*> map {};
 		std::queue<Element*> queue;
 		u_int64_t m_capacity {};
 
 	public:
 		FIFOCache(int capacity) : m_capacity(capacity) {
-			std::cout << "FIFO Cache has been created" << std::endl;
+			std::cout << "Created instance of FIFOCache of capacity: " << m_capacity << std::endl;
 			if ( queue.empty() ) {
 				int8_t m_dummy = -1;
 				for (u_int64_t i {}; i < m_capacity; ++i) {
@@ -41,7 +41,7 @@ class FIFOCache : public Cache{
 			}
 		}
 		~FIFOCache() {
-			std::cout << "Destructor FIFO Cache called" << std::endl;
+			std::cout << "Destructor FIFOCache called" << std::endl;
 			
 			for (auto it = map.begin(); it != map.end(); ++it) {
 				Element* toDelete = it->second;	

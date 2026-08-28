@@ -5,22 +5,25 @@
 
 #include "../include/Cache.hpp"
 
-struct Node {
-	int key { };
-	int value { };
-	Node* next { nullptr };
-	Node* prev { nullptr };
-	
-	Node(int key, int value) : key(key), value(value) {
-			
-		std::cout << "Node Constructed" << std::endl;
-	}; 
-};
-
 class LRUCache : public Cache {
 	private:
+		struct Node {
+			int key { };
+			int value { };
+			Node* next { nullptr };
+			Node* prev { nullptr };
+			
+			Node(int key, int value) : key(key), value(value) {
+					
+				std::cout << "Node Constructed" << std::endl;
+			}; 
+		};
+
+
+
+
 		std::unordered_map<int, Node*> map { };	
-		int m_capacity { };
+		std::size_t m_capacity { };
 		Node* head { nullptr };
 		Node* tail { nullptr };
 
@@ -43,15 +46,16 @@ class LRUCache : public Cache {
 		}
 	public:
 		LRUCache(int capacity) : m_capacity(capacity) {
+			std::cout << "Created instance of LRUCache of capacity: " << m_capacity << std::endl;
 			map.clear();
 			head = new Node(-1, -1);
 			tail = new Node(-1, -1);
 			head->next = tail;
 			tail->prev = head;
-			std::cout << "Created instance of of LRU Cache of capacity: " << m_capacity << std::endl;
 		} 
 
 		~LRUCache() {
+			std::cout << "Destructor LRUCache called" << std::endl;
 			Node* current = head;
 			while (current != nullptr) {
 				Node* nextNode = current->next;
@@ -72,7 +76,6 @@ class LRUCache : public Cache {
 			insertAfterHead(node);
 			
 
-			std::cout << "Value: " << node->value << std::endl;
 			return node->value;
 		}
 
